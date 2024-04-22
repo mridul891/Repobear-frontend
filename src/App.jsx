@@ -1,34 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+
 import './App.css'
 
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [result, setresult] = useState([]);
+  const [repo, setrepo] = useState(null);
+  const getmessage = async (req, res) => {
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+    try {
+      const response = await fetch('http://localhost:3000/get-repo', options)
+      const data = await response.json();
+      const member = data.items
+      setresult(member)
+      console.log(result)
+    }
+
+    catch (error) {
+      console.log(error)
+    }
+  }
+
 
   return (
-    <>
+    <div className='h'>
+      <button onClick={getmessage}>login with github </button>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {result.map((data, index) => {
+
+          const value = data.private;
+          if (value) {
+            return (
+              <>
+                <div key={index} onClick={() => {
+                  setrepo(data.name)
+                  console.log(repo)
+                }}>{data.name}</div>
+              </>
+            )
+          }
+        }
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div>
+        <h1>selected repo :{repo}</h1>
+
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
