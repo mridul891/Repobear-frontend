@@ -1,44 +1,35 @@
-import { Button } from "@/components/ui/button";
 
 import logo1 from '../assets/logo1.svg'
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Icons } from "./icons";
-import { useEffect, useState } from "react";
-
-
-const githubOAuthURL = `http://localhost:3000/login`;
-
+import { useEffect } from "react";
 
 
 const GitHubOAuth = () => {
 
-    const [url, setUrl] = useState("http://localhost:3000/login")
-    const [accessToken, setAccessToken] = useState(null)
+    const url = "http://localhost:3000/login/"
     const navigate = useNavigate()
     useEffect(() => {
         const url = window.location.search;
         const parsedData = new URLSearchParams(url);
         const accessToken = parsedData.get("code");
-        console.log(accessToken)
         const options = {
             method: "GET"
         }
         try {
-            fetch("http://localhost:3000/callback" + "?code=" + accessToken, options).then((response) => response.json()).then((data) => {
-                setAccessToken(data.access_token)
-                if (data.access_token) {
-                    localStorage.setItem("accessToken", data.access_token)
-                }
-                if (accessToken != null) {
-                    navigate("/")
-                }
-            })
+            fetch("http://localhost:3000/callback" + "?code=" + accessToken, options)
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data)
+                    if (data.access_token) {
+                        localStorage.setItem("accessToken", data.access_token)
+                        navigate("/")
+                    }
+                })
         } catch (error) {
             console.log(error)
         }
-
-    })
-
+    }, [])
     return (
         <div className="grid grid-cols-2 h-[100vh] w-[100vw]">
             {/* One part */}
