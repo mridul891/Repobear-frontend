@@ -10,3 +10,5 @@ Currently, two official plugins are available:
 
 
 This project basically helps you to share your private repository with a public url
+
+This repo basically tell the frontend of repo bear 
